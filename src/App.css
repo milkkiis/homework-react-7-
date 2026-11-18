@@ -1,38 +1,205 @@
-.App {
-  text-align: center;
+:root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1f2430;
+    --muted: #8a91a3;
+    --border: #e4e7ef;
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --radius: 14px;
+    --shadow: 0 8px 30px rgba(31, 36, 48, 0.08);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef0ff 0%, var(--bg) 60%);
+    color: var(--text);
+    font-family: -apple-system, 'Segoe UI', Roboto, Inter, sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Карточка приложения */
+.app {
+    max-width: 560px;
+    margin: 48px auto;
+    padding: 28px;
+    background: var(--card);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.app h1 {
+    margin: 0 0 20px;
+    font-size: 28px;
+    font-weight: 700;
 }
 
-.App-link {
-  color: #61dafb;
+/* Кнопка добавления */
+.add-todo-button {
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+.add-todo-button:hover { background: var(--primary-hover); }
+.add-todo-button:active { transform: scale(0.98); }
+
+/* Список задач */
+.todo-list {
+    margin: 24px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.todo-list:empty::before {
+    content: 'Задач пока нет';
+    text-align: center;
+    color: var(--muted);
+    padding: 20px 0;
 }
+
+.todo-item {
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    border-radius: 10px;
+    animation: appear 0.25s ease;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.todo-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(31, 36, 48, 0.08);
+}
+.todo-item.completed {
+    text-decoration: line-through;
+    color: var(--muted);
+    border-left-color: var(--border);
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* Модальное окно */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 24, 40, 0.55);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: fade 0.2s ease;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 400px;
+    background: var(--card);
+    padding: 24px;
+    border-radius: var(--radius);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    animation: appear 0.25s ease;
+}
+
+.modal-content h3 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.modal-content input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-actions button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.modal-actions button:first-child { background: var(--border); color: var(--text); }
+.modal-actions button:first-child:hover { background: #d6dae6; }
+.modal-actions button:last-child { background: var(--primary); color: #fff; }
+.modal-actions button:last-child:hover { background: var(--primary-hover); }
+
+@keyframes fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+
+/* Строка задачи: чекбокс, название, кнопки */
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.todo-item input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.todo-title {
+    flex: 1;
+    word-break: break-word;
+}
+
+/* Кнопки действий появляются при наведении */
+.todo-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+.todo-item:hover .todo-actions { opacity: 1; }
+@media (hover: none) { .todo-actions { opacity: 1; } }
+
+.icon-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.icon-btn:hover { background: var(--border); color: var(--primary); }
+.icon-btn.danger:hover { background: #fee2e2; color: #dc2626; }
